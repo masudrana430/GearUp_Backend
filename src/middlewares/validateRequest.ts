@@ -9,7 +9,7 @@ interface ParsedRequest {
 }
 
 export const validateRequest = (schema: ZodType): RequestHandler => {
-  return (req, _res, next): void => {
+  return (req, res, next): void => {
     const result = schema.safeParse({
       body: req.body,
       params: req.params,
@@ -31,6 +31,8 @@ export const validateRequest = (schema: ZodType): RequestHandler => {
     }
 
     const parsedData = result.data as ParsedRequest;
+
+    res.locals.validated = parsedData;
 
     if (parsedData.body !== undefined) {
       req.body = parsedData.body;

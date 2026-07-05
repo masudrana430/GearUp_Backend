@@ -1,5 +1,13 @@
 import { Router } from "express";
 import { authRouter } from "../modules/auth/auth.route.js";
+import {
+  adminCategoryRouter,
+  publicCategoryRouter,
+} from "../modules/category/category.route.js";
+import {
+  providerGearRouter,
+  publicGearRouter,
+} from "../modules/gear/gear.route.js";
 
 const router = Router();
 
@@ -15,5 +23,11 @@ router.get("/health", (_req, res) => {
 });
 
 router.use("/auth", authRouter);
+
+router.use("/categories", publicCategoryRouter);
+router.use("/gear", publicGearRouter);
+
+router.use("/admin/categories", adminCategoryRouter);
+router.use("/provider/gear", providerGearRouter);
 
 export const apiRouter = router;

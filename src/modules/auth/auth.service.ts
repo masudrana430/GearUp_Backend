@@ -115,6 +115,7 @@ const loginUser = async (input: LoginInput) => {
     user: safeUser,
     accessToken,
   };
+  
 };
 
 const getCurrentUser = async (userId: string) => {
