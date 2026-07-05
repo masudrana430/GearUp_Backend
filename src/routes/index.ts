@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authRouter } from "../modules/auth/auth.route.js";
 
 const router = Router();
 
@@ -12,5 +13,7 @@ router.get("/health", (_req, res) => {
     },
   });
 });
+
+router.use("/auth", authRouter);
 
 export const apiRouter = router;
