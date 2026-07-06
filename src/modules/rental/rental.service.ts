@@ -2,7 +2,7 @@
 import {
   Prisma,
   RentalStatus,
-} from "../../generated/prisma/client.js";
+} from "@prisma/client";
 import { prisma } from "../../lib/prisma.js";
 import { ApiError } from "../../utils/ApiError.js";
 import type {
