@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "build": "tsup src/server.ts --format esm --out-dir dist --clean",
-    "start": "node dist/server.js",
+    "dev": "tsx watch src/local.ts",
+    "build": "tsup src/local.ts --format esm --out-dir dist --clean",
+    "start": "node dist/local.js",
     "type-check": "tsc --noEmit",
     "postinstall": "prisma generate",
     "vercel-build": "prisma generate && prisma migrate deploy"
