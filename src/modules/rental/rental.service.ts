@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import {
   Prisma,
   RentalStatus,
-} from "../../../generated/prisma/client.js";
+} from "../../generated/prisma/client.js";
 import { prisma } from "../../lib/prisma.js";
 import { ApiError } from "../../utils/ApiError.js";
 import type {
