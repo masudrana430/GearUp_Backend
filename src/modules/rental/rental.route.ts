@@ -1,4 +1,4 @@
-import { Router } from "express";
+﻿import { Router } from "express";
 import { auth } from "../../middlewares/auth.js";
 import { validateRequest } from "../../middlewares/validateRequest.js";
 import { rentalController } from "./rental.controller.js";

@@ -1,4 +1,4 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 
 const categoryIdParamsSchema = z.object({
   id: z.string().uuid("Category ID must be a valid UUID"),

@@ -1,4 +1,4 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 
 const gearIdParamsSchema = z.object({
   id: z.string().uuid("Gear ID must be a valid UUID"),

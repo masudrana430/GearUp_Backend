@@ -1,4 +1,4 @@
-export interface RentalItemInput {
+﻿export interface RentalItemInput {
   gearItemId: string;
   quantity: number;
 }
