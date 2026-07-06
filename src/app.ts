@@ -35,6 +35,14 @@ app.get("/", (_req, res) => {
   });
 });
 
+app.use(express.json({ limit: "10mb" }));
+
+app.use(
+  express.urlencoded({
+    extended: true,
+  }),
+);
+
 app.use("/api/v1", apiRouter);
 
 app.use(notFound);

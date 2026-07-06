@@ -12,6 +12,7 @@ import {
   customerRentalRouter,
   providerOrderRouter,
 } from "../modules/rental/rental.route.js";
+import { paymentRouter } from "../modules/payment/payment.route.js";
 
 const router = Router();
 
@@ -50,5 +51,7 @@ router.use(
   "/provider/orders",
   providerOrderRouter,
 );
+
+router.use("/payments", paymentRouter);
 
 export const apiRouter = router;
