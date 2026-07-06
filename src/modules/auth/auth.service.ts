@@ -23,9 +23,13 @@ const safeUserSelect = {
 } as const;
 
 const registerUser = async (input: RegisterInput) => {
+  const email = input.email.trim().toLowerCase();
+
+  console.log("Registration email received:", email);
+
   const existingUser = await prisma.user.findUnique({
     where: {
-      email: input.email,
+      email,
     },
   });
 
@@ -46,13 +50,24 @@ const registerUser = async (input: RegisterInput) => {
   const user = await prisma.user.create({
     data: {
       name: input.name,
-      email: input.email,
+      email,
       passwordHash,
       phone: input.phone,
       address: input.address,
       role: input.role,
     },
-    select: safeUserSelect,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      phone: true,
+      address: true,
+      profileImage: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
   const accessToken = signAccessToken({
@@ -68,17 +83,17 @@ const registerUser = async (input: RegisterInput) => {
 };
 
 const loginUser = async (input: LoginInput) => {
-  console.log("Login request email:", input.email);
+  const email = input.email.trim().toLowerCase();
 
-  const normalizedEmail = input.email.trim().toLowerCase();
+  console.log("Login email received:", email);
 
   const user = await prisma.user.findUnique({
     where: {
-      email: normalizedEmail,
+      email,
     },
   });
 
-  console.log("Database user found:", user?.email);
+  console.log("Matched database user:", user?.email);
 
   if (!user) {
     throw new ApiError(401, "Invalid email or password", [
