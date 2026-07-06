@@ -97,8 +97,7 @@ const getRentals: RequestHandler = catchAsync(
     const query = res.locals.validated
       .query as AdminRentalQuery;
 
-    const result =
-      await adminService.getRentals(query);
+    const result = await adminService.getRentals(query);
 
     sendResponse(res, {
       statusCode: 200,
@@ -113,8 +112,7 @@ const getPayments: RequestHandler = catchAsync(
     const query = res.locals.validated
       .query as AdminPaymentQuery;
 
-    const result =
-      await adminService.getPayments(query);
+    const result = await adminService.getPayments(query);
 
     sendResponse(res, {
       statusCode: 200,
