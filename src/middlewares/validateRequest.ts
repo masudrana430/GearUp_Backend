@@ -8,7 +8,9 @@ interface ParsedRequest {
   query?: Record<string, unknown>;
 }
 
-export const validateRequest = (schema: ZodType): RequestHandler => {
+export const validateRequest = (
+  schema: ZodType,
+): RequestHandler => {
   return (req, res, next): void => {
     const result = schema.safeParse({
       body: req.body,
@@ -17,16 +19,26 @@ export const validateRequest = (schema: ZodType): RequestHandler => {
     });
 
     if (!result.success) {
-      const errorDetails = result.error.issues.map((issue) => ({
-        field: issue.path
-          .join(".")
-          .replace(/^body\./, "")
-          .replace(/^params\./, "")
-          .replace(/^query\./, ""),
-        message: issue.message,
-      }));
+      const errorDetails = result.error.issues.map(
+        (issue) => ({
+          field: issue.path
+            .join(".")
+            .replace(/^body\./, "")
+            .replace(/^params\./, "")
+            .replace(/^query\./, ""),
 
-      next(new ApiError(400, "Validation failed", errorDetails));
+          message: issue.message,
+        }),
+      );
+
+      next(
+        new ApiError(
+          400,
+          "Validation failed",
+          errorDetails,
+        ),
+      );
+
       return;
     }
 

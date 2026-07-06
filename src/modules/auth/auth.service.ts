@@ -68,11 +68,17 @@ const registerUser = async (input: RegisterInput) => {
 };
 
 const loginUser = async (input: LoginInput) => {
+  console.log("Login request email:", input.email);
+
+  const normalizedEmail = input.email.trim().toLowerCase();
+
   const user = await prisma.user.findUnique({
     where: {
-      email: input.email,
+      email: normalizedEmail,
     },
   });
+
+  console.log("Database user found:", user?.email);
 
   if (!user) {
     throw new ApiError(401, "Invalid email or password", [
@@ -115,7 +121,6 @@ const loginUser = async (input: LoginInput) => {
     user: safeUser,
     accessToken,
   };
-  
 };
 
 const getCurrentUser = async (userId: string) => {

@@ -8,6 +8,10 @@ import {
   providerGearRouter,
   publicGearRouter,
 } from "../modules/gear/gear.route.js";
+import {
+  customerRentalRouter,
+  providerOrderRouter,
+} from "../modules/rental/rental.route.js";
 
 const router = Router();
 
@@ -27,7 +31,24 @@ router.use("/auth", authRouter);
 router.use("/categories", publicCategoryRouter);
 router.use("/gear", publicGearRouter);
 
-router.use("/admin/categories", adminCategoryRouter);
-router.use("/provider/gear", providerGearRouter);
+router.use(
+  "/admin/categories",
+  adminCategoryRouter,
+);
+
+router.use(
+  "/provider/gear",
+  providerGearRouter,
+);
+
+router.use(
+  "/rentals",
+  customerRentalRouter,
+);
+
+router.use(
+  "/provider/orders",
+  providerOrderRouter,
+);
 
 export const apiRouter = router;

@@ -28,9 +28,13 @@ const gearInclude = {
   },
 } as const;
 
-const ensureCategoryExists = async (
-  categoryId: string,
-): Promise<void> => {
+const isUuid = (value: string): boolean => {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value,
+  );
+};
+
+const ensureCategoryExists = async (categoryId: string): Promise<void> => {
   const category = await prisma.category.findFirst({
     where: {
       id: categoryId,
@@ -48,10 +52,7 @@ const ensureCategoryExists = async (
   }
 };
 
-const createGear = async (
-  providerId: string,
-  input: CreateGearInput,
-) => {
+const createGear = async (providerId: string, input: CreateGearInput) => {
   await ensureCategoryExists(input.categoryId);
 
   return prisma.gearItem.create({
@@ -67,8 +68,7 @@ const createGear = async (
 
       ...(input.specifications !== undefined
         ? {
-            specifications:
-              input.specifications as Prisma.InputJsonValue,
+            specifications: input.specifications as Prisma.InputJsonValue,
           }
         : {}),
     },
@@ -94,11 +94,15 @@ const getPublicGear = async (query: GearQueryInput) => {
     isActive: true,
 
     category: {
-      isActive: true,
+      is: {
+        isActive: true,
+      },
     },
 
     provider: {
-      status: "ACTIVE",
+      is: {
+        status: "ACTIVE",
+      },
     },
   };
 
@@ -126,26 +130,34 @@ const getPublicGear = async (query: GearQueryInput) => {
   }
 
   if (category) {
-    where.category = {
-      isActive: true,
-      OR: [
-        {
+    if (isUuid(category)) {
+      where.category = {
+        is: {
           id: category,
+          isActive: true,
         },
-        {
-          slug: {
-            equals: category,
-            mode: "insensitive",
-          },
+      };
+    } else {
+      where.category = {
+        is: {
+          isActive: true,
+          OR: [
+            {
+              slug: {
+                equals: category,
+                mode: "insensitive",
+              },
+            },
+            {
+              name: {
+                equals: category,
+                mode: "insensitive",
+              },
+            },
+          ],
         },
-        {
-          name: {
-            equals: category,
-            mode: "insensitive",
-          },
-        },
-      ],
-    };
+      };
+    }
   }
 
   if (brand) {
@@ -157,8 +169,17 @@ const getPublicGear = async (query: GearQueryInput) => {
 
   if (minPrice !== undefined || maxPrice !== undefined) {
     where.pricePerDay = {
-      ...(minPrice !== undefined ? { gte: minPrice } : {}),
-      ...(maxPrice !== undefined ? { lte: maxPrice } : {}),
+      ...(minPrice !== undefined
+        ? {
+            gte: minPrice,
+          }
+        : {}),
+
+      ...(maxPrice !== undefined
+        ? {
+            lte: maxPrice,
+          }
+        : {}),
     };
   }
 
@@ -288,8 +309,7 @@ const updateGear = async (
   if (!gear) {
     throw new ApiError(404, "Gear item not found", [
       {
-        message:
-          "The gear item does not exist or does not belong to you",
+        message: "The gear item does not exist or does not belong to you",
       },
     ]);
   }
@@ -298,10 +318,7 @@ const updateGear = async (
     await ensureCategoryExists(input.categoryId);
   }
 
-  const {
-    specifications,
-    ...standardFields
-  } = input;
+  const { specifications, ...standardFields } = input;
 
   return prisma.gearItem.update({
     where: {
@@ -312,8 +329,7 @@ const updateGear = async (
 
       ...(specifications !== undefined
         ? {
-            specifications:
-              specifications as Prisma.InputJsonValue,
+            specifications: specifications as Prisma.InputJsonValue,
           }
         : {}),
     },
@@ -321,10 +337,7 @@ const updateGear = async (
   });
 };
 
-const deleteGear = async (
-  providerId: string,
-  gearId: string,
-) => {
+const deleteGear = async (providerId: string, gearId: string) => {
   const gear = await prisma.gearItem.findFirst({
     where: {
       id: gearId,
@@ -335,8 +348,7 @@ const deleteGear = async (
   if (!gear) {
     throw new ApiError(404, "Gear item not found", [
       {
-        message:
-          "The gear item does not exist or does not belong to you",
+        message: "The gear item does not exist or does not belong to you",
       },
     ]);
   }

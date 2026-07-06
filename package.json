@@ -12,7 +12,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "tsx prisma/seed.ts",
     "type-check": "tsc --noEmit",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
