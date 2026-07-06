@@ -6,6 +6,8 @@ import morgan from "morgan";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
 import { apiRouter } from "./routes/index.js";
+import swaggerUi from "swagger-ui-express";
+import { swaggerDocument } from "./docs/swagger.js";
 
 const app = express();
 
@@ -44,6 +46,31 @@ app.use(
 );
 
 app.use("/api/v1", apiRouter);
+
+
+app.get("/api-docs.json", (_req, res) => {
+  res.status(200).json(swaggerDocument);
+});
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, {
+    explorer: true,
+
+    customSiteTitle: "GearUp API Documentation",
+
+    customCss:
+      ".swagger-ui .topbar { display: none; }",
+
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      filter: true,
+    },
+  }),
+);
+
 
 app.use(notFound);
 app.use(globalErrorHandler);
