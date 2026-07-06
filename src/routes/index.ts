@@ -13,6 +13,8 @@ import {
   providerOrderRouter,
 } from "../modules/rental/rental.route.js";
 import { paymentRouter } from "../modules/payment/payment.route.js";
+import { reviewRouter } from "../modules/review/review.route.js";
+import { adminRouter } from "../modules/admin/admin.route.js";
 
 const router = Router();
 
@@ -31,11 +33,14 @@ router.use("/auth", authRouter);
 
 router.use("/categories", publicCategoryRouter);
 router.use("/gear", publicGearRouter);
+router.use("/reviews", reviewRouter);
 
 router.use(
   "/admin/categories",
   adminCategoryRouter,
 );
+
+router.use("/admin", adminRouter);
 
 router.use(
   "/provider/gear",
@@ -43,14 +48,16 @@ router.use(
 );
 
 router.use(
+  "/provider/orders",
+  providerOrderRouter,
+);
+
+router.use(
   "/rentals",
   customerRentalRouter,
 );
 
-router.use(
-  "/provider/orders",
-  providerOrderRouter,
-);
+
 
 router.use("/payments", paymentRouter);
 
