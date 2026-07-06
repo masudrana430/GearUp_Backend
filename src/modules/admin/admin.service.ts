@@ -435,7 +435,6 @@ const getPayments = async (
 
   return {
     items: payments,
-
     meta: {
       page,
       limit,
