@@ -10,7 +10,7 @@ Customers can browse available gear, create rental orders, make payments and sub
 - Health Check: https://gear-up-backend-delta.vercel.app/api/v1/health
 - Swagger Documentation: https://gear-up-backend-delta.vercel.app/api-docs
 - OpenAPI JSON: https://gear-up-backend-delta.vercel.app/api-docs.json
-- GitHub Repository: YOUR_GITHUB_REPOSITORY_URL
+- GitHub Repository: https://github.com/masudrana430/GearUp_Backend
 - Demo Video: YOUR_DEMO_VIDEO_URL
 
 ## Admin Credentials

@@ -6,7 +6,7 @@ import morgan from "morgan";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
 import { apiRouter } from "./routes/index.js";
-import swaggerUi from "swagger-ui-express";
+// import swaggerUi from "swagger-ui-express";
 import { swaggerDocument } from "./docs/swagger.js";
 
 const app = express();
@@ -52,25 +52,99 @@ app.get("/api-docs.json", (_req, res) => {
   res.status(200).json(swaggerDocument);
 });
 
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocument, {
-    explorer: true,
+app.get(["/api-docs", "/api-docs/"], (_req, res) => {
+  /*
+   * This route loads Swagger UI from unpkg.
+   * The CSP is limited to this documentation response.
+   */
+  res.setHeader(
+    "Content-Security-Policy",
+    [
+      "default-src 'self'",
+      "style-src 'self' 'unsafe-inline' https://unpkg.com",
+      "script-src 'self' 'unsafe-inline' https://unpkg.com",
+      "img-src 'self' data: https:",
+      "connect-src 'self'",
+      "font-src 'self' data: https:",
+    ].join("; "),
+  );
 
-    customSiteTitle: "GearUp API Documentation",
+  res.status(200).type("html").send(`
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
 
-    customCss:
-      ".swagger-ui .topbar { display: none; }",
+          <title>GearUp API Documentation</title>
 
-    swaggerOptions: {
-      persistAuthorization: true,
-      displayRequestDuration: true,
-      filter: true,
-    },
-  }),
-);
+          <link
+            rel="stylesheet"
+            href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css"
+          />
 
+          <style>
+            html {
+              box-sizing: border-box;
+              overflow-y: scroll;
+            }
+
+            *,
+            *::before,
+            *::after {
+              box-sizing: inherit;
+            }
+
+            body {
+              margin: 0;
+              background: #fafafa;
+            }
+
+            .swagger-ui .topbar {
+              display: none;
+            }
+          </style>
+        </head>
+
+        <body>
+          <div id="swagger-ui"></div>
+
+          <script
+            src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"
+            crossorigin="anonymous"
+          ></script>
+
+          <script
+            src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js"
+            crossorigin="anonymous"
+          ></script>
+
+          <script>
+            window.onload = function () {
+              window.ui = SwaggerUIBundle({
+                url: "/api-docs.json",
+                dom_id: "#swagger-ui",
+
+                presets: [
+                  SwaggerUIBundle.presets.apis,
+                  SwaggerUIStandalonePreset
+                ],
+
+                layout: "StandaloneLayout",
+                deepLinking: true,
+                persistAuthorization: true,
+                displayRequestDuration: true,
+                filter: true
+              });
+            };
+          </script>
+        </body>
+      </html>
+    `);
+});
 
 app.use(notFound);
 app.use(globalErrorHandler);
