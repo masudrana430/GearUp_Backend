@@ -9,7 +9,15 @@ import { apiRouter } from "./routes/index.js";
 // import swaggerUi from "swagger-ui-express";
 import { swaggerDocument } from "./docs/swagger.js";
 
+
+
 const app = express();
+
+/*
+ * Format all JSON responses with two-space indentation.
+ * Useful for API demonstrations and assignment evaluation.
+ */
+app.set("json spaces", 2);
 
 app.use(helmet());
 
